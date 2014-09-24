@@ -49,6 +49,37 @@ In diesem Beispiel wurde die minimalisierte Version (d.h. die Production-Version
 
 ### jQuery aus einem CDN
 
+Wie oben erwähnt kann jQuery auch direkt aus einem Content Delivery Network eingebunden werden.
+Dazu muss nur das `src` Attribut des `script`-Tags aus dem obigen Beispiel durch die entsprechende URL ersetzt werden.
+jQuery wird in verschiedenen CDNs geführt, welches davon verwendet wird ist prinzipiell egal.
+
+Hier die entsprechenden URLs für verschiedene Content Delivery Networks (MaxCDN ist das offizielle Content Delivery Network von jQuery, diesem sollte also Vorzug gegeben werden):
+
+* MaxCDN: `//code.jquery.com/jquery-1.11.1.min.js`
+* Google CDN: `//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js`
+* Microsoft CDN: `http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.1.min.js`
+* CloudFlare CDN: `//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js`
+* jsDelivr CDN: `//cdn.jsdelivr.net/jquery/1.11.1/jquery.min.js`
+
+Gegebenenfalls ist bei der URL vorne noch das Protokoll (`http`) anzuführen, falls während der Entwicklung über `file:` auf die Dateien zugegriffen werden sollte.
+Bei einer Entwicklung über einen Webserver wird das Protokoll vom Web-Browser automatisch korrekt ergänzt.
+
+Hier noch ein Beispiel mit der entsprechenden Einbindung von jQuery über das offizielle Content Delivery Network:
+
+```HTML
+<!doctype html>
+<html>
+	<head>
+		<title>jQuery Testseite</title>
+		<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+	</head>
+
+	<body>
+		<h1>jQuery Testseite</h1>
+	</body>
+</html>
+```
+
 
 # Einführung in Selektoren und DOM-Manipulation
 
