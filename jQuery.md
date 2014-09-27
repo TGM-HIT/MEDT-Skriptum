@@ -83,5 +83,37 @@ Hier noch ein Beispiel mit der entsprechenden Einbindung von jQuery über das of
 
 # Einführung in Selektoren und DOM-Manipulation
 
+Für die folgenden Beispiele wird das obige HTML-Grundgerüst als Grundlage genommen, d.h. eine quasi leere HTML-Datei, die lediglich jQuery lädt und eine einzelne Überschrift (`h1`) enthält.
+
+## Selektoren (Grundlagen)
+
+Selektoren in jQuery dienen dazu, spezifische Elemente aus dem DOM abzurufen.
+Das [Selektor Kapitel](http://api.jquery.com/category/selectors/ "Selectors | jQuery API Documentation") aus der [jQuery API Dokumentation](http://api.jquery.com) enthält eine Vielzahl von möglichen Selektoren.
+Hier sollen nur die einfachsten Varianten aufgeführt werden, weitere Details können jederzeit in der Dokumentation nachgelesen werden bzw. werden in diesem Dokument bei Bedarf behandelt.
+
+Der einfachste Selektor besteht einfach aus einem Tag und sieht wie folgt aus: `$("tag")`, wobei `tag` jedes beliebige Tag aus der zugehörigen HTML-Seite (bzw. dem DOM) sein kann.
+
+Im obigen Beispiel würde zum Beispiel der Selektor `$("h1")` die Überschrift zurückliefern (wobei die genaue Ausgabe je nach Browser unterschiedlich aussehen kann):
+
+```
+> $("h1")
+< [<h1>jQuery Testseite</h1>]
+```
+
+Falls die Seite mehr als ein Element enthält, das dem entsprechenden Selektor entspricht, so werden alle Elemente zurückgeliefert.
+Mit den zusätzlichen Optionen `:first` und `:last` kann spezifisch auf das erste oder letzte Element des Typs zugegriffen werden.
+Soll auf das n-te Element zugegriffen werden, so muss die zusätzliche Option `:eq(n)` verwendet werden (wobei wie in der Informatik üblich mit 0 begonnen wird).
+
+Der Selektor um auf die erste Überschrift der Seite zuzugreifen sieht also wie folgt aus: `$("h1:first")` oder aber `$("h1:eq(0)")`.
+
+Zusätzlich zu den Tags kann auch auf HTML-Klassen oder IDs zugegriffen werden, wobei hier die gleiche Syntax wie in CSS verwendet wird.
+Um also alle Elemente einer Klasse zu erhalten, wird der Selektor `$(".class")` verwendet.
+Da IDs eindeutig sein sollten, sollte auch der Selektor `$("#id")` jeweils nur das Element mit der entsprechenden ID zurückliefern.
+
+Weiters lassen sich Selektoren durch Beistriche kombinieren, wobei das Ergebnis dann nur jene Elemente sind, die alle Selektoren erfüllen.
+
+## DOM-Manipulation (Grundlagen)
+
+
 # Abrufen und Einfügen von Web-Content (AJAX)
 
