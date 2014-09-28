@@ -114,6 +114,68 @@ Weiters lassen sich Selektoren durch Beistriche kombinieren, wobei das Ergebnis 
 
 ## DOM-Manipulation (Grundlagen)
 
+Elemente aus dem DOM, die man über einen Selektor abgefragt hat, kann man mit jQuery direkt bearbeiten/modifizieren.
+So kann man zum Beispiel mit `.text()` direkt auf den Inhalt des Elements zugreifen bzw. mit `.text("Neuer Text")` diesen ändern:
+
+```
+> $("h1").text()
+< "jQuery Testseite"
+> $("h1").text("Neuer Text")
+< [<h1>Neuer Text</h1>]
+> $("h1").text()
+< "Neuer Text"
+```
+
+Änderungen werden sofort im DOM übernommen und somit in der HTML-Darstellung vom Browser aktualisiert dargestellt.
+
+Mit `.attr("name")` lässt sich von einem Tag ein entsprechendes Attribut abfragen; mit `attr("name", "wert")` wiederum ein Attribut überschreiben bzw. neu erstellen.
+Dies kann zum Beispiel für das `src` Attribut von Bildern (also `img`-Tags) verwendet werden.
+
+Elemente aus dem DOM (und somit auch aus der zugehörigen HTML-Darstellung) lassen sich mit `.hide()` verstecken und mit `.show()` wieder anzeigen.
+Soll ein Element ganz gelöscht werden, so kann die Methode `.remove()` verwendet werden.
+
+Ein neues Element lässt sich mit `$("<tag>")` anlegen - hier werden im Unterschied zu den Selektoren die spitzen Klammern beim Tag benötigt.
+Ein derartig neu erstelltes Element hat allerdings noch keinerlei Zuordnung zum DOM und muss erst hinzugefügt werden.
+Dazu dienen die folgenden Methoden:
+
+* `.after(neuesTag)` legt ein neues Tag nach dem vom Selektor zurückgelieferten Element an.
+* `.before(neuesTag)` legt ein neues Tag vor dem vom Selektor zurückgelieferten Element an.
+* `.append(neuesTag)` legt ein neues Tag innerhalb des vom Selektor zurückgelieferten Elements an (am Ende).
+* `.prepend(neuesTag)` legt ein neues Tag innerhalb des vom Selektor zurückgelieferten Elements an (am Anfang).
+
+Falls der Selektor mehr als ein Element enthält, so beeinflussen diese Methoden alle zurückgelieferten Elemente, d.h. das neue Tag wird mehrfach angelegt.
+
+Zusätzlich gibt es auch die Methoden `.appendTo(selektor)`, `prependTo(selektor)`, `.insertAfter(selektor)` und `.insertBefore(selektor)` welche die gleichen Auswirkungen wie die obigen Methoden haben, allerdings auf das neue Tag angewendet werden müssen.
+
+Hier ein paar Beispiele dazu:
+
+```
+> $("h1").hide()
+< [<h1>jQuery Testseite</h1>]
+> $("h1").show()
+< [<h1 style="display: block;">jQuery Testseite</h1>]
+```
+
+Das obige Beispiel versteckt zuerst alle Überschriften (in diesem Beispiel ist nur eine Überschrift im Dokument enthalten) und zeigt diese anschließend wieder an.
+Dabei wird automatisch ein neues Style-Attribut beim Element angelegt, welches für diese Funktionalität benötigt wird. 
+
+```
+> var abs = $("<p>").text("Ein neuer Absatz")
+< undefined
+> abs
+< [<p>Ein neuer Absatz</p>]
+> abs.insertAfter("h1:last")
+< [<p>Ein neuer Absatz</p>]
+> $("h1:last").after(abs)
+< [<h1>jQuery Testseite</h1>]
+```
+
+Hier wird ein neuer Absatz angelegt und in der Variablen `abs` zwischengespeichert.
+Anschließend wird dieser neue Absatz an die letzte Überschrift im Dokument angefügt.
+Die beiden aufgeführten Varianten sind dabei gleichwertig.
+
+Um ein neues Element innerhalb eines anderen Tags anzulegen, kann die Methode `.append()` bzw. `.appendTo()` verwendet werden.
+Dies kann zum Beispiel dazu verwendet werden, wenn ein neues Feld in einen `div`-Container hinzugefügt werden soll, oder eine neue Zeile an eine Tabelle angehängt werden soll.
 
 # Abrufen und Einfügen von Web-Content (AJAX)
 
