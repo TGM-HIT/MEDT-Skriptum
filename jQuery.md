@@ -220,3 +220,186 @@ Dies kann zum Beispiel dazu verwendet werden, wenn ein neues Feld in einen `div`
 
 # Abrufen und Einfügen von Web-Content (AJAX)
 
+Externe Inhalte werden üblicherweise entweder in JSON (JavaScript Object Notation) oder XML (eXtensible Markup Language)  zur Verfügung gestellt.
+Für jQuery (bzw. generell in JavaScript) sind Inhalte im JSON-Format deutlich einfacher zu verarbeiten.
+
+Ein einfaches Beispiel für ein Web Service ist der [Random User Generator](http://randomuser.me "Random User Generator").
+Im Gegensatz zu vielen Web Services, bietet dieser lediglich die Abfrage von Daten (mittels eines GET-Requests) an, auch wird kein eigener API-Key benötigt und die Anfragen können unverschlüsselt und unsigniert durchgeführt werden.
+Dadurch ist dieses Web Service sehr einfach in eigene Seiten zu integrieren.
+
+Eine einfache Anfrage an (http://api.randomuser.me) liefert die Daten von einem zufällig generierten Benutzer zurück, wie das folgende Beispiel zeigt:
+
+```JSON
+{
+  results: [{
+    user: {
+      gender: "female",
+      name: {
+        title: "ms",
+        first: "lois",
+        last: "williams"
+      },
+      location: {
+        street: "1969 elgin st",
+        city: "frederick",
+        state: "delaware",
+        zip: "56298"
+      },
+      email: "lois.williams50@example.com",
+      username: "heavybutterfly920",
+      password: "enterprise",
+      salt: ">egEn6YsO",
+      md5: "2dd1894ea9d19bf5479992da95713a3a",
+      sha1: "ba230bc400723f470b68e9609ab7d0e6cf123b59",
+      sha256: "f4f52bf8c5ad7fc759d1d4156b25a4c7b3d1e2eec6c92d80e508aa0b7946d4ba",
+      registered: "1288182167",
+      dob: "146582153",
+      phone: "(555)-942-1322",
+      cell: "(178)-341-1520",
+      SSN: "137-37-8866",
+      picture: {
+        large: "http://api.randomuser.me/portraits/women/55.jpg",
+        medium: "http://api.randomuser.me/portraits/med/women/55.jpg",
+        thumbnail: "http://api.randomuser.me/portraits/thumb/women/55.jpg",
+      },
+      version: "0.4.1"
+    },
+    seed: "graywolf"
+  }]
+}
+```
+
+Dabei werden geschwungene Klammern (`{}`) verwendet um Objekte darzustellen; die Bezeichnungen vor dem Doppelpunkt sind die jeweiligen Attribute des Objekts.
+Mit eckigen Klammern (`[]`) werden Arrays dargestellt.
+
+Um dieses Web Service mittels jQuery abzufragen können die Methoden `$.get()`, `$.getJSON()` und `$.ajax()` verwendet werden.
+Jede dieser Methoden benötigt eine Callback-Methode, die in JavaScript auch anonym sein darf.
+
+```
+> $.get("http://api.randomuser.me", function(data) { console.log(data); });
+< Object
+    results: Array[1]
+      0: Object
+        seed: "5258f7b7aa3076b0"
+        user: Object
+        __proto__: Object
+      length: 1
+      __proto__: Array[0]
+    __proto__: Object
+```
+
+```
+> $.getJSON("http://api.randomuser.me", function(data) { console.log(data); });
+< Object
+    results: Array[1]
+      0: Object
+        seed: "89073c213d20c00e"
+        user: Object
+        __proto__: Object
+      length: 1
+      __proto__: Array[0]
+    __proto__: Object
+```
+
+```
+> $.ajax({
+    url: 'http://api.randomuser.me/',
+    dataType: 'json',
+    success: function(data){
+      console.log(data);
+    }
+  });
+< Object
+    results: Array[1]
+      0: Object
+        seed: "5f814b856f86a39e"
+        user: Object
+        __proto__: Object
+      length: 1
+      __proto__: Array[0]
+    __proto__: Object
+```
+
+Diese drei Beispiele machen eine Anfrage auf das Web Service und geben - sobald die Anfrage beantwortet wurde - das Ergebnis wieder aus.
+Die Verarbeitung passiert dabei asynchron, d.h. nach dem Stellen der Anfrage läuft das Skript weiter und wird bei Abschluss der Anfrage unterbrochen.
+
+Die Funktion, die nach Abschluss der Anfrage aufgerufen wird kann entweder wie in den Beispielen oben anonym definiert werden, d.h. direkt an der Stelle wo sie aufgerufen wird.
+Alternativ kann auch eine Funktion im Vorhinein definiert werden, welche dann einfach nur übergeben wird, wie das folgende Beispiel zeigt:
+
+```
+> function callback(data) {
+    console.log(data);
+  }
+< undefined
+> callback("Test")
+< Test
+> $.ajax({
+    url: 'http://api.randomuser.me/',
+    dataType: 'json',
+    success: callback
+  })
+< Object
+    results: Array[1]
+      0: Object
+        seed: "a79ef58d165fa02a"
+        user: Object
+        __proto__: Object
+      length: 1
+      __proto__: Array[0]
+    __proto__: Object
+```
+
+Natürlich sollten die Inhalte, die das Web Service zurückliefert auch in der Seite inkludiert werden und nicht nur wie in den bisherigen Beispielen in der Konsole ausgegeben werden.
+Dazu können nun wieder die jQuery Selektoren und die Methoden zur DOM-Manipulation verwendet werden.
+
+Um zum Beispiel einen neuen Absatz mit dem Inhalt `Hallo Vorname!` zu erstellen, kann folgende Funktion als Callback verwendet werden:
+
+```JavaScript
+function callback(data) {
+  var abs = $("<p>").text("Hallo " + data.results[0].user.name.first + "!");
+  $("h1:last").after(abs);
+}
+```
+
+Nach Aufruf des AJAX-Requests sollte nun ein neuer Absatz in der HTML-Seite dargestellt werden:
+
+```JavaScript
+$.ajax({
+  url: 'http://api.randomuser.me/',
+  dataType: 'json',
+  success: callback
+});
+```
+
+Beim Random User Web Service kann man mit dem Parameter `results` die Menge der Rückgabewerte beeinflussen, falls man mehr als einen Benutzer automatisch zurückgeben soll.
+Um hier automatisch mehrere Absätze im Dokument zu erstellen, muss in der Callback Funktion eine Schleife integriert werden:
+
+```JavaScript
+function callback(data) {
+  for (var i=0; i<data.results.length; i++) {
+    var abs = $("<p>").text("Hallo " + data.results[i].user.name.first + "!");
+    $("h1:last").after(abs);
+	}
+}
+
+$.ajax({
+  url: 'http://api.randomuser.me/?results=5',
+  dataType: 'json',
+  success: callback
+});
+```
+
+Im Resultat des Random User Webservices sind auch Bilder der Benutzer enthalten.
+Wenn man diese in die Seite integrieren will, so müssen automatisch entsprechende `img`-Tags erstellt werden, wobei hier die URL im `src`-Attribut und nicht im Inhalt selber übergeben wird.
+
+Das folgende Beispiel fügt das Bild des Benutzers in die Seite ein:
+
+```JavaScript
+function callback(data) {
+  var url = data.results[0].user.picture.thumbnail;
+  var img = $("<img>", {src: url});
+  img.insertAfter("h1:first");
+}
+```
+
+
