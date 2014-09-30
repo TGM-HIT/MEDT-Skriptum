@@ -83,7 +83,27 @@ Hier noch ein Beispiel mit der entsprechenden Einbindung von jQuery über das of
 
 # Einführung in Selektoren und DOM-Manipulation
 
-Für die folgenden Beispiele wird das obige HTML-Grundgerüst als Grundlage genommen, d.h. eine quasi leere HTML-Datei, die lediglich jQuery lädt und eine einzelne Überschrift (`h1`) enthält.
+Für die folgenden Beispiele wird ein einfaches HTML-Grundgerüst als Grundlage genommen.
+Dieses enthält lediglich mehrere Überschriften (`h1`) sowie Absätze (`p`):
+
+```HTML
+<!doctype html>
+<html>
+	<head>
+		<title>jQuery Testseite</title>
+		<script src="jquery-1.11.1.min.js"></script>
+	</head>
+
+	<body>
+		<h1>Erste &Uuml;berschrift</h1>
+		<p>Erster Absatz</p>
+		<h1>Zweite &Uuml;berschrift</h1>
+		<p>Zweiter Absatz</p>
+		<h1>Dritte &Uuml;berschrift</h1>
+		<p>Dritter Absatz</p>
+	</body>
+</html>
+```
 
 ## Selektoren (Grundlagen)
 
@@ -97,7 +117,7 @@ Im obigen Beispiel würde zum Beispiel der Selektor `$("h1")` die Überschrift z
 
 ```
 > $("h1")
-< [<h1>jQuery Testseite</h1>]
+< [<h1>Erste Überschrift</h1>, <h1>Zweite Überschrift</h1>, <h1>Dritte Überschrift</h1>]
 ```
 
 Falls die Seite mehr als ein Element enthält, das dem entsprechenden Selektor entspricht, so werden alle Elemente zurückgeliefert.
@@ -105,6 +125,15 @@ Mit den zusätzlichen Optionen `:first` und `:last` kann spezifisch auf das erst
 Soll auf das n-te Element zugegriffen werden, so muss die zusätzliche Option `:eq(n)` verwendet werden (wobei wie in der Informatik üblich mit 0 begonnen wird).
 
 Der Selektor um auf die erste Überschrift der Seite zuzugreifen sieht also wie folgt aus: `$("h1:first")` oder aber `$("h1:eq(0)")`.
+
+```
+> $("h1:first")
+< [<h1>Erste Überschrift</h1>]
+> $("h1:eq(1)")
+< [<h1>Zweite Überschrift</h1>]
+> $("h1:last")
+< [<h1>Dritte Überschrift</h1>]
+```
 
 Zusätzlich zu den Tags kann auch auf HTML-Klassen oder IDs zugegriffen werden, wobei hier die gleiche Syntax wie in CSS verwendet wird.
 Um also alle Elemente einer Klasse zu erhalten, wird der Selektor `$(".class")` verwendet.
@@ -115,14 +144,21 @@ Weiters lassen sich Selektoren durch Beistriche kombinieren, wobei das Ergebnis 
 ## DOM-Manipulation (Grundlagen)
 
 Elemente aus dem DOM, die man über einen Selektor abgefragt hat, kann man mit jQuery direkt bearbeiten/modifizieren.
-So kann man zum Beispiel mit `.text()` direkt auf den Inhalt des Elements zugreifen bzw. mit `.text("Neuer Text")` diesen ändern:
+So kann man zum Beispiel mit `.text()` direkt auf den Inhalt des Elements zugreifen; falls der Selektor mehr als ein Element zurückliefert, so werden deren Inhalte automatisch aneinandergehängt.
 
 ```
 > $("h1").text()
-< "jQuery Testseite"
-> $("h1").text("Neuer Text")
+< "Erste ÜberschriftZweite ÜberschriftDritte Überschrift"
+> $("h1:first").text()
+< "Erste Überschrift"
+```
+
+Ebenso kann man den Inhalt eines Elements mit der Methode `.text("Neuer Text")` ändern; falls der Selektor mehr als ein Element enthält, so wird der Text bei jedem dieser Elemente geändert.
+
+```
+> $("h1:first").text("Neuer Text")
 < [<h1>Neuer Text</h1>]
-> $("h1").text()
+> $("h1:first").text()
 < "Neuer Text"
 ```
 
@@ -132,7 +168,26 @@ Mit `.attr("name")` lässt sich von einem Tag ein entsprechendes Attribut abfrag
 Dies kann zum Beispiel für das `src` Attribut von Bildern (also `img`-Tags) verwendet werden.
 
 Elemente aus dem DOM (und somit auch aus der zugehörigen HTML-Darstellung) lassen sich mit `.hide()` verstecken und mit `.show()` wieder anzeigen.
+Dieses Beispiel versteckt zuerst die letzte Überschrift und zeigt diese anschließend wieder an.
+Dabei wird automatisch ein neues Style-Attribut beim Element angelegt, welches für diese Funktionalität benötigt wird. 
+
+```
+> $("h1:last").hide()
+< [<h1 style="display: none;">Dritte Überschrift</h1>]
+> $("h1:last").show()
+< [<h1 style="display: block;">Dritte Überschrift</h1>]
+```
+
 Soll ein Element ganz gelöscht werden, so kann die Methode `.remove()` verwendet werden.
+
+```
+> $("h1")
+< [<h1>Erste Überschrift</h1>, <h1>Zweite Überschrift</h1>, <h1>Dritte Überschrift</h1>]
+> $("h1:last").remove()
+< [<h1>Dritte Überschrift</h1>]
+> $("h1")
+< [<h1>Erste Überschrift</h1>, <h1>Zweite Überschrift</h1>]
+```
 
 Ein neues Element lässt sich mit `$("<tag>")` anlegen - hier werden im Unterschied zu den Selektoren die spitzen Klammern beim Tag benötigt.
 Ein derartig neu erstelltes Element hat allerdings noch keinerlei Zuordnung zum DOM und muss erst hinzugefügt werden.
@@ -147,17 +202,7 @@ Falls der Selektor mehr als ein Element enthält, so beeinflussen diese Methoden
 
 Zusätzlich gibt es auch die Methoden `.appendTo(selektor)`, `prependTo(selektor)`, `.insertAfter(selektor)` und `.insertBefore(selektor)` welche die gleichen Auswirkungen wie die obigen Methoden haben, allerdings auf das neue Tag angewendet werden müssen.
 
-Hier ein paar Beispiele dazu:
-
-```
-> $("h1").hide()
-< [<h1>jQuery Testseite</h1>]
-> $("h1").show()
-< [<h1 style="display: block;">jQuery Testseite</h1>]
-```
-
-Das obige Beispiel versteckt zuerst alle Überschriften (in diesem Beispiel ist nur eine Überschrift im Dokument enthalten) und zeigt diese anschließend wieder an.
-Dabei wird automatisch ein neues Style-Attribut beim Element angelegt, welches für diese Funktionalität benötigt wird. 
+Die beiden Varianten `abs.insertAfter("h1:last")` und `$("h1:last").after(abs)` sind gleichwertig.
 
 ```
 > var abs = $("<p>").text("Ein neuer Absatz")
@@ -167,12 +212,8 @@ Dabei wird automatisch ein neues Style-Attribut beim Element angelegt, welches f
 > abs.insertAfter("h1:last")
 < [<p>Ein neuer Absatz</p>]
 > $("h1:last").after(abs)
-< [<h1>jQuery Testseite</h1>]
+< [<h1>Dritte Überschrift</h1>]
 ```
-
-Hier wird ein neuer Absatz angelegt und in der Variablen `abs` zwischengespeichert.
-Anschließend wird dieser neue Absatz an die letzte Überschrift im Dokument angefügt.
-Die beiden aufgeführten Varianten sind dabei gleichwertig.
 
 Um ein neues Element innerhalb eines anderen Tags anzulegen, kann die Methode `.append()` bzw. `.appendTo()` verwendet werden.
 Dies kann zum Beispiel dazu verwendet werden, wenn ein neues Feld in einen `div`-Container hinzugefügt werden soll, oder eine neue Zeile an eine Tabelle angehängt werden soll.
