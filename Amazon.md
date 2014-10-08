@@ -316,8 +316,6 @@ function signRequest( requestURL, AssociateTag, AccessKeyID, SecretAccessKey ) {
 	signedRequest = signedRequest + "&Signature=" + encodeURIComponent( hash.toString(CryptoJS.enc.Base64) )
 	return signedRequest
 }
-
-signRequest( "http://ecs.amazonaws.com/onca/xml?Service=AWSECommerceService&Version=2011-08-01&Operation=ItemLookup&ItemId=0575079754&IncludeReviewsSummary=no&ResponseGroup=ItemAttributes,Images,EditorialReview", "blogocrsat-20", "AKIAJDDYPE5OXDU74JEA", "P0RALcRFrMZiSeammUVAUQiyKev14cqTkiyZY8rv" )
 ```
 
 Die Funktion `signRequest` erstellt als Rückgabewert bei korrekten Parametern eine URL, die direkt für den Zugriff auf die AWS verwendet werden kann.
