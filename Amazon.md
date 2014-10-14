@@ -124,7 +124,7 @@ Fügt man diese Anfrage im Browser ein, erhält man als Antwort ein recht umfang
 </ItemLookupResponse>
 ```
 
-## Abfrage mittels jQuery und JavaScript
+## Abfrage mittels JavaScript
 
 Um eine Anfrage an das Amazon Product Advertising API zu stellen, muss - wie im obigen Beispiel mit dem *Signed Requests Helper* - die Abfrage entsprechend bearbeitet und signiert werden, bevor diese abgesendet werden kann.
 
@@ -320,5 +320,21 @@ function signRequest( requestURL, AssociateTag, AccessKeyID, SecretAccessKey ) {
 
 Die Funktion `signRequest` erstellt als Rückgabewert bei korrekten Parametern eine URL, die direkt für den Zugriff auf die AWS verwendet werden kann.
 
-### Verarbeiten der Anfrage mit jQuery
+### Verwendung eines Proxies bei fehlenden AWS Zugangsdaten
+
+Falls die Anmeldung bei AWS für die *Access Key ID* und den *Secret Access Key* nicht möglich ist, kann unter [aws.ocrs.at](http://aws.ocrs.at) ein Proxy verwendet werden, der aus den übergebenen Parametern automatisch einen signierten Request erstellt.
+
+Das *AssociateTag* muss dabei jedoch auf jeden Fall mit angegeben werden. Bei Aufruf der URL und Übergabe der üblichen Parameter der *Product Advertising API* liefert diese Seite die signierte URL zurück:
+
+In diesem Beispiel ist auch wieder das *AssociateTag* zu ersetzen:
+```
+http://aws.ocrs.at/?Service=AWSECommerceService&Version=2011-08-01&Operation=ItemLookup&ItemId=0575079754&AssociateTag=--AssociateTag--&IncludeReviewsSummary=no&ResponseGroup=ItemAttributes,Images,EditorialReview
+```
+
+Diese Abfrage liefert als Ergebnis die signierte URL:
+```
+http://ecs.amazonaws.com/onca/xml?AWSAccessKeyId=AKIAJVM5HKLGATQIH3GQ&AssociateTag=--AssociateTag--&IncludeReviewsSummary=no&ItemId=0575079754&Operation=ItemLookup&ResponseGroup=ItemAttributes%2CImages%2CEditorialReview&Service=AWSECommerceService&Timestamp=2014-10-14T11%3A57%3A08Z&Version=2011-08-01&Signature=zfO5JwQwk5zWXdjFBqltvzRNVqug0%2Btd03GKu%2BuThpM%3D
+```
+
+## Verarbeiten der Anfrage mit jQuery
 
