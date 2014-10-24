@@ -340,5 +340,20 @@ Diese Abfrage liefert als Ergebnis die signierte URL:
 http://ecs.amazonaws.com/onca/xml?AWSAccessKeyId=AKIAJVM5HKLGATQIH3GQ&AssociateTag=--AssociateTag--&IncludeReviewsSummary=no&ItemId=0575079754&Operation=ItemLookup&ResponseGroup=ItemAttributes%2CImages%2CEditorialReview&Service=AWSECommerceService&Timestamp=2014-10-14T11%3A57%3A08Z&Version=2011-08-01&Signature=zfO5JwQwk5zWXdjFBqltvzRNVqug0%2Btd03GKu%2BuThpM%3D
 ```
 
+Nachdem die Abfrage über JavaScript aufgrund der CORS-Richtlinien von Amazon nicht erlaubt ist (d.h. eine Anfrage funktioniert zwar von einem Server oder auch direkt über den Browser, nicht jedoch über AJAX), gibt es einen Proxy, der die entsprechende Anfrage automatisch beantwortet:
+
+```
+http://aws.ocrs.at/request.php?Service=AWSECommerceService&Version=2011-08-01&Operation=ItemLookup&ItemId=0575079754&AssociateTag=--AssociateTag--&IncludeReviewsSummary=no&ResponseGroup=ItemAttributes,Images,EditorialReview
+```
+
+Diese Abfrage lässt sich auch direkt mit jQuery ausführen:
+```JavaScript
+$.ajax({
+	url: "http://aws.ocrs.at/request.php?Service=AWSECommerceService&Version=2011-08-01&Operation=ItemLookup&ItemId=0575079754&AssociateTag=--AssociateTag--&IncludeReviewsSummary=no&ResponseGroup=ItemAttributes,Images,EditorialReview",
+	dataType:"xml",
+	success: function(xml) { console.log(xml) }
+})
+```
+
 ## Verarbeiten der Anfrage mit jQuery
 
